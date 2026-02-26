@@ -1,0 +1,158 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Debug Consola</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app">
+      <!-- Header -->
+      <div class="header">
+        <h1>🐛 Debug Consola</h1>
+        <div class="header-controls">
+          <input type="text" id="searchInput" placeholder="Buscar por URL..." />
+          <button id="groupBtn" class="btn">Agrupar</button>
+          <button id="compareBtn" class="btn">Comparar JSON</button>
+          <button id="schemaBtn" class="btn"> Schema JSON</button>
+          <button id="editorBtn" class="btn">Editar</button>
+          <button id="clearBtn" class="btn btn-danger">Limpiar</button>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div class="main-content">
+        <!-- Tabla de peticiones -->
+        <div class="table-container" id="tableContainer">
+          <table id="requestsTable">
+            <thead>
+              <tr>
+                <th>Método</th>
+                <th>URL</th>
+                <th>Estado</th>
+                <th>Duración</th>
+                <th id="groupHeader" style="display: none">Repeticiones</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+          </table>
+        </div>
+
+        <!-- Panel de detalles -->
+        <div class="details-panel" id="detailsPanel" style="display: none">
+          <div class="details-header">
+            <h3>Detalles</h3>
+            <div class="details-tabs">
+              <button class="tab-btn" data-tab="response">Response Body</button>
+              <button class="btn btn-success" id="copyResponseBtn">Copiar</button>
+              <button class="btn" id="closeDetailsBtn">×</button>
+            </div>
+          </div>
+          <div class="details-content">
+            <pre id="detailsContent"></pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modales -->
+      <div id="compareModal" class="modal" style="display: none">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2>Comparador JSON</h2>
+            <button class="close-modal">×</button>
+          </div>
+          <div class="modal-body">
+            <div class="compare-container">
+              <textarea id="json1" placeholder="JSON 1"></textarea>
+              <textarea id="json2" placeholder="JSON 2"></textarea>
+            </div>
+            <button id="compareJsonBtn" class="btn">Comparar</button>
+            <div id="compareResult"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Schema JSON -->
+      <div id="schemaModal" class="modal" style="display: none">
+        <div class="modal-content" style="width: 700px;">
+          <div class="modal-header">
+            <h2>📋 Análisis de Campos Null</h2>
+            <button class="close-modal">×</button>
+          </div>
+          <div class="modal-body">
+            <div id="nullsDetectedSection" style="margin-bottom: 20px;"></div>
+            
+            <div style="border-top: 1px solid #3e3e3e; margin: 20px 0;"></div>
+            
+            <p style="margin-bottom: 10px; color: #abb2bf;">
+              <strong>Opcional:</strong> Pegá un JSON de referencia para comparar tipos:
+            </p>
+            <textarea 
+              id="schemaInput" 
+              placeholder='Ejemplo:
+{
+  "ownerID": 0,
+  "name": "string",
+  "email": "string",
+  "age": 0
+}'
+              style="width: 100%; height: 150px; font-family: monospace; background: #1e1e1e; color: #d4d4d4; border: 1px solid #3e3e3e; padding: 10px;"
+            ></textarea>
+            
+            <div style="display: flex; gap: 10px; margin-top: 15px;">
+              <button id="analizarConSchemaBtn" class="btn" style="flex: 2;">🔍 Comparar con Schema</button>
+              <button id="limpiarSchemaBtn" class="btn btn-danger" style="flex: 1;">Limpiar</button>
+            </div>
+            
+            <div id="schemaResult" style="margin-top: 20px;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Editor Modal -->
+      <div id="editorModal" class="modal" style="display: none">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2>Editor de Peticiones</h2>
+            <button class="close-modal">×</button>
+          </div>
+          <div class="modal-body">
+            <select id="requestSelector">
+              <option value="">Seleccionar petición...</option>
+            </select>
+            <div class="editor-fields">
+              <input type="text" id="editUrl" placeholder="URL" />
+              <select id="editMethod">
+                <option>POST</option>
+                <option>PUT</option>
+                <option>DELETE</option>
+              </select>
+              <textarea id="editHeaders" placeholder="Headers (JSON)"></textarea>
+              <textarea id="editBody" placeholder="Body (JSON)"></textarea>
+            </div>
+            
+            <div class="editor-actions" style="display: flex; gap: 10px; margin-top: 15px">
+              <button id="sendEditedBtn" class="btn" style="flex: 2;">📤 Enviar</button>
+              <button id="testNullFieldsBtn" class="btn btn-warning" style="flex: 1;">🧪 Testear Campos Null</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Null Test Modal -->
+      <div id="nullTestModal" class="modal" style="display: none">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2>Test de Campos Null</h2>
+            <button class="close-modal">×</button>
+          </div>
+          <div class="modal-body">
+            <div id="nullTestResults"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="panel.js"></script>
+  </body>
+</html>
