@@ -1,8 +1,5 @@
-// Almacén de peticiones
 let requests = [];
 let ports = [];
-
-// Interceptar peticiones ANTES de que se envíen (para capturar body)
 chrome.webRequest.onBeforeRequest.addListener(
   (details) => {
     if (details.method === 'POST' || details.method === 'PUT' || details.method === 'DELETE') {
@@ -43,7 +40,6 @@ chrome.webRequest.onBeforeRequest.addListener(
   ['requestBody']
 );
 
-// Capturar headers de la PETICIÓN
 chrome.webRequest.onBeforeSendHeaders.addListener(
   (details) => {
     const request = requests.find(r => r.id === details.requestId);
@@ -63,7 +59,6 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
   ['requestHeaders']
 );
 
-// Capturar headers de la RESPUESTA
 chrome.webRequest.onHeadersReceived.addListener(
   (details) => {
     const request = requests.find(r => r.id === details.requestId);
@@ -76,7 +71,6 @@ chrome.webRequest.onHeadersReceived.addListener(
   ['responseHeaders']
 );
 
-// Capturar respuestas completadas
 chrome.webRequest.onCompleted.addListener(
   (details) => {
     const request = requests.find(r => r.id === details.requestId);
@@ -103,7 +97,6 @@ chrome.webRequest.onCompleted.addListener(
   ['responseHeaders']
 );
 
-// Manejar errores
 chrome.webRequest.onErrorOccurred.addListener(
   (details) => {
     const request = requests.find(r => r.id === details.requestId);
@@ -117,7 +110,6 @@ chrome.webRequest.onErrorOccurred.addListener(
   { urls: ['<all_urls>'] }
 );
 
-// Notificar a todos los puertos conectados
 function notifyAll(event, data) {
   ports.forEach(port => {
     try {
@@ -128,7 +120,6 @@ function notifyAll(event, data) {
   });
 }
 
-// Manejar conexiones desde el panel
 chrome.runtime.onConnect.addListener((port) => {
   if (port.name === 'debug-panel') {
     ports.push(port);
@@ -155,7 +146,6 @@ chrome.runtime.onConnect.addListener((port) => {
   }
 });
 
-// Función para reenviar petición modificada
 async function resendRequest(data, port) {
   const { url, method, headers, body, originalId } = data;
   
